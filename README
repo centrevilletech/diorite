@@ -1,18 +1,54 @@
-Welcome to your Appcelerator Titanium Mobile Project
+Welcome to the Diorite Framework!
 
-This is a blank project.  Start by editing your application's app.js to 
-make your first mobile project using Titanium.
+This is a quick-start development framework and boiler plate for Appcelerator Titanium applications using the Ti.Classic method for layouts. An alloy version of this may be released in the near future.
 
+This assumes an app layout where the developer will utilize the following principles for separation of app logic and UI:
 
+- Models
+- Views
+- Controllers
+- Libs
+- Components
 
-----------------------------------
-Stuff our legal folk make us say:
+Each of these framework concepts are defined below:
 
-Appcelerator, Appcelerator Titanium and associated marks and logos are 
-trademarks of Appcelerator, Inc. 
+Models:
+This is the data layer for your application, where creation, manipulation, and storage of objects should occur. As an example, let's say you're creating a list application (as in the bundled example) where you'll need to store and manage an object containing your lists that the user will enter and manage. You might consider creating a model with the following methods:
 
-Titanium is Copyright (c) 2008-2013 by Appcelerator, Inc. All Rights Reserved.
+lists.save()
+lists.get()
+lists.new()
+lists.createList()
+lists.getListBasedOnId()
 
-Titanium is licensed under the Apache Public License (Version 2). Please
-see the LICENSE file for the full license.
+... and so on. The idea is that all of your data for managing the lists occurs inside the blackbox object that is the "lists" object. From the perspective of your app controller, it shouldn't matter what happens inside of these methods code-wise, as long as they return what is expected when running. These objects have all of their variables and methods inside a closed scope, and thus the data inside should only be available via get/set methods. See models/lists.js for an example on how to use these.
+
+Views:
+The view files are object factories where you'll build out your UI for a respective app view. UI contruction should happen here for the screen you're building. It's also considered good practice to use methods within the views to generate templates that will be loaded into the view by the controller. A good example of this would be a tableViewRow you create, where each row has a template you are binding data to. You'd create the row inside of the view using a viewMethod from the controller, then bind data to it and load it into the table from the controller. (See views/list.js and the generateToDoRow method for an example of a viewMethod.) We recommend never adding events into your views. Do this from your controllers ONLY. :)
+
+Controllers:
+This is the bread and butter of your application. The controller fetches data from the models, and loads it into the view. The controllers should contain all view events that you're listening for, and handle data binding. (See list.js and selectList.js as examples inside of the "controllers" folder.) In Diorite, the "app.js" file in resources is considered the *main* controller, with all other controllers considered *sub* controllers.
+
+Libraries:
+This holds the system files for the framework. These should be loaded at boot as the only global variables in your application. We've done this inside of Resources/app.js at the top. (WARNING: Be careful when choosing to not load some of these libraries, as a lot of them are dependent on each other to function. We've tried to tune these to be light on memory, so their shouldn't be a need to remove any of these.)
+
+Components:
+A component is a reusable UI CommonJS object that can be reused throughout your application. This would be similar to a Directive in AngularJS. Diorite comes bundled with a view useful componenets out of the box that will help you with getting your applications developed quickly. 
+
+1) activityIndicator - As you'd expect, this is an activity indicator object with a label you can easily load in a few lines of code. It has standard open/close methods for easily opening and closing it as needed.
+2) datePicker - This is used for capturing a date from a user that works seamlessly across iOS/Android.
+3) fourButtonPicker - This is a UI dialog with four customizable buttons.
+4) menu - A quick way to develop a menu for your app. You can see an example of this in use in app.js.
+5) navbar - A cross platform navBar that supports opening a menu, or closing the current window based on how you load it up. See views/list.js or views/selectList.js for examples of how to open and load in the navBar.
+6) textEntryDialog - Used to capture text entry from a user.
+7) timePicker - Used to let a user pick a time from a dialog.
+
+(More will be added soon.)
+
+Recommendations:
+- For every app view you have, there should be a corresponding controller. Don't use one sub controller for multiple views-- as this can get dirty quickly. Keep it simple.
+- Never add any application events inside your views or models. Events should only be in the controller.
+- All global events should be done inside of app.js. Don't put these inside your sub controllers, as it can making debugging painful.
+
+See GETTINGSTARTED for more information on building your first Diorite application. Thanks for reading, we hope you enjoy this library! :)
 
